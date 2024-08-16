@@ -1,0 +1,88 @@
+import random
+
+class Gun:
+    def __init__(self, name, price, typology, bullets, firepower):
+        self.name = name
+        self.price = price
+        self.typology = typology
+        self.bullets = bullets
+        self.firepower = firepower
+
+    def __str__(self):
+        return f"名字：{self.name}，价格：{self.price}，种类：{self.typology}，子弹数：{self.bullets}，伤害：{self.firepower}"
+class Game:
+    def __init__(self):
+        self.guns = [
+            Gun("狂徒", 2900, "步枪", "30/60", "140,70,49"),
+            Gun("冥狙", 4700, "狙击枪", "5/10", "240,150,119"),
+            Gun("正义", 800, "手枪", "6/24", "124,70,49"),
+            Gun("奥丁", 3200, "机枪", "100/200", "77,49,30")
+        ]
+        self.money = 5000
+        self.game_number = 0
+        self.win_number = 0
+        self.lose_number = 0
+        self.your_gun = None
+
+    def play_game(self):
+        print("请选择你要的枪(对应编号)：")
+        for index, gun in enumerate(self.guns):
+            print(f"{index + 1}. {gun}")
+
+        while True:
+            choice = input("请输入你的选择（编号）：")
+            if choice.isdigit() and 1 <= int(choice) <= len(self.guns):
+                self.your_gun = self.guns[int(choice) - 1]
+                print(f"你选择了：{self.your_gun}")
+                break
+            else:
+                print("选择无效，请重新选择。")
+
+        win_money = 0
+        lose_money = 0
+        if self.your_gun == self.guns[0]:
+            result = random.randint(0, 3)
+            win_money = 3000
+            lose_money = 1900
+        elif self.your_gun == self.guns[1]:
+            result = random.randint(0, 1)
+            win_money = 5000
+            lose_money = 1000
+        elif self.your_gun == self.guns[2]:
+            result = random.randint(0, 5)
+            win_money = 2500
+            lose_money = 900
+        elif self.your_gun == self.guns[3]:
+            result = random.randint(0, 4)
+            win_money = 3000
+            lose_money = 900 + 1600
+
+        if result == 0:
+            print("你赢了一次")
+            self.money += win_money
+            self.win_number += 1
+        else:
+            print("你输了一次")
+            self.money -= self.your_gun.price
+            self.money += lose_money
+            self.lose_number += 1
+
+        self.game_number += 1
+        print(f"当前余额：{self.money}，游戏次数：{self.game_number},赢了{self.win_number}次，输了{self.lose_number}次")
+
+    def run(self):
+        while self.money < 10000 and self.money > 0:
+            self.play_game()
+        probability = (self.win_number / self.game_number) * 100
+
+        if self.money < 0:
+            print("game lose,你没有资金了")
+        else:
+            print(
+                f"你赢了，游戏次数：{self.game_number}，共赢了{self.win_number}次，共输了{self.lose_number}次,胜率为{probability}%")
+
+
+if __name__ == "__main__":
+    game = Game()
+    game.run()
+
